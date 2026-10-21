@@ -1,33 +1,36 @@
 
-#include <iostream>
-#include <cstring>
-using namespace std;
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 
-int main()
+int stack[100];
+int top = -1;
+
+void push(int value)
 {
-    char exp[100];
-    int stack[100], top = -1;
+    top++;
+    stack[top] = value;
+}
+
+int pop()
+{
+    return stack[top--];
+}
+
+void evaluatePostfix(char exp[])
+{
     int i, a, b, result;
 
-    cout << "Enter postfix expression: ";
-    cin >> exp;
-
-    for (i = 0; i < strlen(exp); i++)
+    for (i = 0; exp[i] != '\0'; i++)
     {
-        if (exp[i] >= '0' && exp[i] <= '9')
+        if (isdigit(exp[i]))
         {
-            stack[++top] = exp[i] - '0';
+            push(exp[i] - '0');
         }
         else
         {
-            if (top < 1)
-            {
-                cout << "Invalid expression";
-                return 0;
-            }
-
-            b = stack[top--];
-            a = stack[top--];
+            b = pop();
+            a = pop();
 
             switch (exp[i])
             {
@@ -46,25 +49,32 @@ int main()
                 case '/':
                     if (b == 0)
                     {
-                        cout << "Division by zero";
-                        return 0;
+                        printf("Division by zero is not allowed");
+                        return;
                     }
                     result = a / b;
                     break;
 
                 default:
-                    cout << "Invalid operator";
-                    return 0;
+                    printf("Invalid operator");
+                    return;
             }
 
-            stack[++top] = result;
+            push(result);
         }
     }
 
-    if (top == 0)
-        cout << "Result = " << stack[top];
-    else
-        cout << "Invalid expression";
+    printf("Result = %d", pop());
+}
+
+int main()
+{
+    char exp[100];
+
+    printf("Enter postfix expression: ");
+    scanf("%99s", exp);
+
+    evaluatePostfix(exp);
 
     return 0;
 }

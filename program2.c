@@ -1,74 +1,94 @@
 
-#include <iostream>
-using namespace std;
+#include <stdio.h>
+
+int stack[100];
+int top = -1;
+
+void push()
+{
+    int value;
+
+    if (top == 99)
+    {
+        printf("Stack Overflow");
+    }
+    else
+    {
+        printf("Enter element: ");
+        scanf("%d", &value);
+
+        top++;
+        stack[top] = value;
+
+        printf("Element pushed successfully");
+    }
+}
+
+void pop()
+{
+    if (top == -1)
+    {
+        printf("Stack Underflow");
+    }
+    else
+    {
+        printf("Popped element: %d", stack[top]);
+        top--;
+    }
+}
+
+void display()
+{
+    int i;
+
+    if (top == -1)
+    {
+        printf("Stack is empty");
+    }
+    else
+    {
+        printf("Stack elements: ");
+
+        for (i = top; i >= 0; i--)
+        {
+            printf("%d ", stack[i]);
+        }
+    }
+}
 
 int main()
 {
-    int stack[100], top = -1;
-    int choice, value, i;
+    int choice;
 
     do
     {
-        cout << "\n\n1. Push";
-        cout << "\n2. Pop";
-        cout << "\n3. Display";
-        cout << "\n4. Exit";
-        cout << "\nEnter your choice: ";
-        cin >> choice;
+        printf("\n\n1. Push");
+        printf("\n2. Pop");
+        printf("\n3. Display");
+        printf("\n4. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
 
         switch (choice)
         {
             case 1:
-                if (top == 99)
-                {
-                    cout << "Stack Overflow";
-                }
-                else
-                {
-                    cout << "Enter element: ";
-                    cin >> value;
-
-                    top++;
-                    stack[top] = value;
-
-                    cout << "Element pushed successfully";
-                }
+                push();
                 break;
 
             case 2:
-                if (top == -1)
-                {
-                    cout << "Stack Underflow";
-                }
-                else
-                {
-                    cout << "Popped element: " << stack[top];
-                    top--;
-                }
+                pop();
                 break;
 
             case 3:
-                if (top == -1)
-                {
-                    cout << "Stack is empty";
-                }
-                else
-                {
-                    cout << "Stack elements: ";
-
-                    for (i = top; i >= 0; i--)
-                    {
-                        cout << stack[i] << " ";
-                    }
-                }
+                display();
                 break;
 
             case 4:
-                cout << "Program terminated";
+                printf("Program terminated");
                 break;
 
             default:
-                cout << "Invalid choice";
+                printf("Invalid choice");
         }
 
     } while (choice != 4);
