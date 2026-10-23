@@ -1,133 +1,105 @@
 
 #include <stdio.h>
-#include <stdlib.h>
 
-struct node
+#define SIZE 10
+
+int table[SIZE];
+
+void initialize()
 {
-    int data;
-    struct node *prev;
-    struct node *next;
-};
+    int i;
 
-struct node *head = NULL;
-
-void insert()
-{
-    struct node *newnode, *temp;
-    int value;
-
-    newnode = (struct node *)malloc(sizeof(struct node));
-
-    if (newnode == NULL)
-    {
-        printf("Memory allocation failed");
-        return;
-    }
-
-    printf("Enter value: ");
-    scanf("%d", &value);
-
-    newnode->data = value;
-    newnode->prev = NULL;
-    newnode->next = NULL;
-
-    if (head == NULL)
-    {
-        head = newnode;
-    }
-    else
-    {
-        temp = head;
-
-        while (temp->next != NULL)
-            temp = temp->next;
-
-        temp->next = newnode;
-        newnode->prev = temp;
-    }
-
-    printf("Node inserted successfully");
+    for (i = 0; i < SIZE; i++)
+        table[i] = -1;
 }
 
-void deleteNode()
+void linearProbing()
 {
-    struct node *temp;
-    int value;
+    int key, index, i;
 
-    if (head == NULL)
+    printf("Enter key: ");
+    scanf("%d", &key);
+
+    index = key % SIZE;
+
+    for (i = 0; i < SIZE; i++)
     {
-        printf("List is empty");
-        return;
+        int pos = (index + i) % SIZE;
+
+        if (table[pos] == -1)
+        {
+            table[pos] = key;
+            printf("Key inserted at index %d", pos);
+            return;
+        }
     }
 
-    printf("Enter value to delete: ");
-    scanf("%d", &value);
+    printf("Hash table is full");
+}
 
-    temp = head;
+void quadraticProbing()
+{
+    int key, index, i;
 
-    while (temp != NULL && temp->data != value)
-        temp = temp->next;
+    printf("Enter key: ");
+    scanf("%d", &key);
 
-    if (temp == NULL)
+    index = key % SIZE;
+
+    for (i = 0; i < SIZE; i++)
     {
-        printf("Value not found");
-        return;
+        int pos = (index + i * i) % SIZE;
+
+        if (table[pos] == -1)
+        {
+            table[pos] = key;
+            printf("Key inserted at index %d", pos);
+            return;
+        }
     }
 
-    if (temp->prev != NULL)
-        temp->prev->next = temp->next;
-    else
-        head = temp->next;
-
-    if (temp->next != NULL)
-        temp->next->prev = temp->prev;
-
-    free(temp);
-    printf("Node deleted successfully");
+    printf("No available position found");
 }
 
 void display()
 {
-    struct node *temp = head;
+    int i;
 
-    if (head == NULL)
+    printf("\nIndex\tValue\n");
+
+    for (i = 0; i < SIZE; i++)
     {
-        printf("List is empty");
-        return;
+        if (table[i] == -1)
+            printf("%d\tEmpty\n", i);
+        else
+            printf("%d\t%d\n", i, table[i]);
     }
-
-    printf("NULL <-> ");
-
-    while (temp != NULL)
-    {
-        printf("%d <-> ", temp->data);
-        temp = temp->next;
-    }
-
-    printf("NULL");
 }
 
 int main()
 {
     int choice;
 
+    initialize();
+
     do
     {
-        printf("\n\n1. Insert");
-        printf("\n2. Delete");
+        printf("\n1. Linear Probing");
+        printf("\n2. Quadratic Probing");
         printf("\n3. Display");
-        printf("\n4. Exit");
-        printf("\nEnter your choice: ");
+        printf("\n4. Reset Table");
+        printf("\n5. Exit");
+        printf("\nEnter choice: ");
         scanf("%d", &choice);
 
         switch (choice)
         {
             case 1:
-                insert();
+                linearProbing();
                 break;
 
             case 2:
-                deleteNode();
+                quadraticProbing();
                 break;
 
             case 3:
@@ -135,6 +107,11 @@ int main()
                 break;
 
             case 4:
+                initialize();
+                printf("Table reset successfully");
+                break;
+
+            case 5:
                 printf("Program terminated");
                 break;
 
@@ -142,14 +119,7 @@ int main()
                 printf("Invalid choice");
         }
 
-    } while (choice != 4);
-
-    while (head != NULL)
-    {
-        struct node *temp = head;
-        head = head->next;
-        free(temp);
-    }
+    } while (choice != 5);
 
     return 0;
 }
